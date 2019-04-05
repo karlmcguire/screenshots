@@ -1,0 +1,40 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Helvetica", sans-serif;
+  font-size: 16px;
+}
+
+header {
+  height: 3rem;
+  line-height: 3rem; 
+  background-color: #f0f0f0;
+}
+  nav {
+    display: flex;
+    justify-content: space-between;
+  }
+    .nav__links {
+      cursor: default;
+    }
+    .nav__link {
+      color: #555;
+      text-decoration: none;
+      font-size: 1.15rem;
+    }
+      .nav__link--active {
+        color: #1b85d1;
+      }
+    .nav__links--left {
+      margin-left: 1.15rem;
+    }
+      .nav__links--left .nav__link {
+        margin-right: 1.15rem;
+      }
+    .nav__links--right {
+      margin-right: 1.15rem;
+    }
+      .nav__links--right .nav__link {
+        margin-left: 1.15rem;
+      }
+   
