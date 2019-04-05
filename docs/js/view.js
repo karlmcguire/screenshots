@@ -40,6 +40,9 @@ view.main.render = (path) =>
 ///////////////////////////////////////////////////////////////////////////////
 
 view.page["/"]        = () => `welcome home!`;
+
+
+
 view.page["/about"]   = () => "this is the about page!";
 view.page["/sign_up"] = () => "sign up here!";
 view.page["/sign_in"] = () => "sign in here!";

@@ -6,7 +6,7 @@ body {
 }
 
 .wrap {
-  max-width: 800px;
+  max-width: 700px;
   margin: auto;
 }
 
@@ -15,6 +15,11 @@ header {
   line-height: 3rem; 
   background-color: #f0f0f0;
   border-bottom: 1px solid #ddd;
+
+  position: fixed;
+  top: 0;
+  overflow: hidden;
+  width: 100%;
 }
   nav {
     display: flex;
@@ -45,10 +50,13 @@ header {
       }
 
 main {
-  min-height: 50rem;
+  min-height: 100rem;
 }
   .content {
-    margin: 2.3rem 1.15rem;
+    margin-top: 5.3rem;
+    margin-bottom: 2.3rem;
+    margin-left: 1.15rem;
+    margin-right: 1.15rem;
   }
 
 footer {
