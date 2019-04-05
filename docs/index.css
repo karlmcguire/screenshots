@@ -5,10 +5,16 @@ body {
   font-size: 16px;
 }
 
+.wrap {
+  max-width: 800px;
+  margin: auto;
+}
+
 header {
   height: 3rem;
   line-height: 3rem; 
   background-color: #f0f0f0;
+  border-bottom: 1px solid #ddd;
 }
   nav {
     display: flex;
@@ -37,4 +43,19 @@ header {
       .nav__links--right .nav__link {
         margin-left: 1.15rem;
       }
-   
+
+main {
+  min-height: 50rem;
+}
+  .content {
+    margin: 2.3rem 1.15rem;
+  }
+
+footer {
+  background-color: #f0f0f0;
+  border-top: 1px solid #ddd;
+  height: 10rem;
+  padding: 1.15rem 1.15rem;
+  font-size: 14px;
+  color: #777;
+}
