@@ -65,14 +65,21 @@ view.page["/"] = (model) => {
         <button id="select__button">Sort</button>
         </div>`;
 
-    const posts = sorted.reduce((posts, post) => 
-        posts + `<div class="post">` + `<img src="` + 
-        post.image + `"/><div class="post__info"><span class="post__title">` +
-        post.title + `</span><span class="post__user">` +
-        post.user + ` (` + $.datepicker.formatDate("MM d, yy", post.date) + 
-        `)</span></div></div>`, "");
+    const posts = sorted.reduce((posts, post) => posts +
+        `<div class="post">
+            <a class="post__link" href="` + post.image + `">
+                <img src="` + post.image + `"/>
+            </a>
+            <div class="post__info">
+                <span class="post__title">` + post.title + `</span>
+                <span class="post__user">` + post.user + ` (` +
+                    $.datepicker.formatDate("MM d, yy", post.date) +
+                    `)
+                </span>
+            </div>
+        </div>`, "");
 
-    return select + posts;
+    return select + `<div class="posts">` + posts + `</div>`;
 }
 
 view.nap["/"] = (model) => {
@@ -85,15 +92,35 @@ view.nap["/"] = (model) => {
         $("main").html(view.main.render("/", model));
         view.nap["/"](model);
     });
+
+    $(".post__link").magnificPopup({
+        type: "image",
+        mainClass: "mfp-with-zoom",
+
+        zoom: {
+            enabled: true,
+            duration: 300,
+            easing: "ease-in-out"
+        }
+    });
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-view.page["/about"] = (model) => "this is the about page!";
+view.page["/about"] = (model) => `<h2>About</h2>
+    <p>This is meant to be a community of people who enjoy customizing and 
+sharing their Unix desktops. We'd like to create a simple interface in order 
+to highlight your creations. This platform is still under heavy development, 
+    but check back in after a few months and it should be up and running — 
+ready to host your screenshots and dotfiles.</p>`;
+
+view.nap["/about"] = (model) => {};
+
+///////////////////////////////////////////////////////////////////////////////
+
 view.page["/sign_up"] = (model) => "sign up here!";
 view.page["/sign_in"] = (model) => "sign in here!";
 
-view.nap["/about"] = (model) => {};
 view.nap["/sign_up"] = (model) => {};
 view.nap["/sign_in"] = (model) => {};
 
