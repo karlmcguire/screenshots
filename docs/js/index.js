@@ -7,8 +7,8 @@ import { action } from "./action.js";
 const render = (path) => {
     $("header").html(view.nav.render(path));
 
-    $("main").html(view.main.render(path));
-    view.nap[path]();
+    $("main").html(view.main.render(path, model));
+    view.nap[path](model);
 };
 
 $(() => {

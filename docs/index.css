@@ -50,20 +50,60 @@ header {
       }
 
 main {
-  min-height: 100rem;
 }
   .content {
-    margin-top: 5.3rem;
-    margin-bottom: 2.3rem;
+    margin-top: 6.3rem;
+    margin-bottom: 3.3rem;
     margin-left: 1.15rem;
     margin-right: 1.15rem;
+    
+    display: flex;
+    flex-direction: column;
+  }
+  .post {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 2.3rem;
+    box-shadow: 0px 0px 5px #999;
+  }
+    .post:last-child {
+      margin-bottom: 0;
+    }
+    .post img {
+      width: 100%;
+      height: auto;
+    }
+      .post__info {
+        padding-top: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+      }
+        .post__user {
+          color: #888;
+        }
+        .post__title {
+          color: #333;
+        }
+
+.select {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2.3rem;
+}
+  .select:first-child {
+    margin-bottom: 0.85rem;
+    color: #333;
   }
 
 footer {
   background-color: #f0f0f0;
   border-top: 1px solid #ddd;
   height: 10rem;
-  padding: 1.15rem 1.15rem;
+  padding: 1.15rem 0rem; 
   font-size: 14px;
   color: #777;
 }
+  .footer__text {
+    margin: 0 1.15rem; 
+  }
