@@ -3,6 +3,7 @@ body {
   margin: 0;
   font-family: "Helvetica", sans-serif;
   font-size: 16px;
+  background-color: #f0f0f0;
 }
 
 .wrap {
@@ -51,12 +52,13 @@ header {
       }
 
 main {
+  padding-top: 6.3rem;
+  padding-bottom: 3.3rem;
+  background-color: #fff;
 }
   .content {
-    margin-top: 6.3rem;
-    margin-bottom: 3.3rem;
-    margin-left: 1.15rem;
-    margin-right: 1.15rem;
+    padding-left: 1.15rem;
+    padding-right: 1.15rem;
 
     color: #333;
     line-height: 1.5;
@@ -107,6 +109,34 @@ main {
     margin-bottom: 0.85rem;
     color: #333;
   }
+
+form {
+  font-size: 18px;
+	max-width: 500px; 
+}
+  form label, form input {
+    display: block;
+    width: 100%;
+  }
+  form label {
+    margin-bottom: 0.5em;
+  }
+  form input {
+    font-family: "Roboto", sans-serif;
+    color: #333;
+    padding: 0.5em;
+    font-size: 1em;
+    margin-bottom: 2em;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+  }
+    form input[type="submit"] {
+      border: 1px solid #333;
+      background-color: #333;
+      color: #fff;
+      width: 50%;
+			cursor: pointer;
+    }
 
 footer {
   background-color: #f0f0f0;

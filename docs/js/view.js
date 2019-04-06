@@ -118,11 +118,46 @@ view.nap["/about"] = (model) => {};
 
 ///////////////////////////////////////////////////////////////////////////////
 
-view.page["/sign_up"] = (model) => "sign up here!";
-view.page["/sign_in"] = (model) => "sign in here!";
+view.page["/sign_up"] = (model) => `
+<form action="javascript:void(0)">
+            <label>Email</label> 
+            <input id="email" type="email" autofocus/>
+            
+            <label>Username</label> 
+            <input type="text" />
+            
+            <label>Password</label> 
+            <input type="password" />
+            
+            <label>Password (Again)</label> 
+            <input type="password" />
 
-view.nap["/sign_up"] = (model) => {};
-view.nap["/sign_in"] = (model) => {};
+            <input type="submit" />
+          </form>
+`;
+
+view.nap["/sign_up"] = (model) => {
+    $("#email").focus();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+view.page["/sign_in"] = (model) => `
+<form action="javascript:void(0)">
+            <label>Username</label> 
+            <input id="username" type="text" autofocus/>
+            
+            <label>Password</label> 
+            <input type="password" />
+            
+            <input type="submit" />
+          </form>
+`;
+
+
+view.nap["/sign_in"] = (model) => {
+    $("#username").focus();
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
