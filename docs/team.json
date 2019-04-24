@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Karl McGuire",
+        "title": "Lead Developer",
+        "bio": "I'm the lead developer of this site. I came up with the idea, designed it, and wrote the frontend + backend code. This has been a fun project, and I look forward to continuing to work on it."
+    },
+    {
+        "name": "Henry",
+        "title": "Lead Tail Wagger",
+        "bio": "I'm Karl's dog. I keep him company while he writes code."
+    }
+]

@@ -112,7 +112,12 @@ view.page["/about"] = (model) => `<h2>About</h2>
 sharing their Unix desktops. We'd like to create a simple interface in order 
 to highlight your creations. This platform is still under heavy development, 
     but check back in after a few months and it should be up and running — 
-ready to host your screenshots and dotfiles.</p>`;
+ready to host your screenshots and dotfiles.</p>
+    <h2>Team</h2>` +
+    model.team.reduce((team, person) => team + 
+        `<h3>` + person.name + `</h3>
+        <h4>` + person.title + `</h4>
+        <p>` + person.bio + `</p>`, "");
 
 view.nap["/about"] = (model) => {};
 

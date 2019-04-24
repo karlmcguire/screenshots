@@ -11,27 +11,40 @@ const render = (path) => {
     view.nap[path](model);
 };
 
-$(() => {
-    fetch("https://www.reddit.com/r/unixporn.json")
-    .then((resp) => resp.json())
-    .then((data) => {
-        data.data.children.map(post => {
-            if(post.data.url.substr(-3) != "png") return;
+// getposts fetches posts from an external API (reddit in this case) and adds
+// them to the model for formatting via view.js
+const getposts = (path) => {
+    fetch(path)
+        .then((resp) => resp.json())
+        .then((data) => {
+            data.data.children.map(post => {
+                if(post.data.url.substr(-3) != "png") return;
 
-            model.posts.push({ 
-                title: post.data.title,
-                user: post.data.author,
-                date: new Date(post.data.created*1000),
-                image: post.data.url
+                model.posts.push({ 
+                    title: post.data.title,
+                    user: post.data.author,
+                    date: new Date(post.data.created*1000),
+                    image: post.data.url
+                });
             });
-        });
-    
-        render(window.location.pathname);
-    })
+
+            render(window.location.pathname);
+        })
+}
+
+const getteam = (path) => {
+    fetch(path)
+        .then((resp) => resp.json())
+        .then((data) => { model.team = data })
+}
+
+$(() => {
+    getposts("https://www.reddit.com/r/unixporn.json")
+    getteam("/team.json")
 
     $("header").on("click", ".nav__link", function(e) {
         e.preventDefault();
-   
+
         // href of the clicked link
         let href = $(this).attr("href");
 
@@ -42,7 +55,7 @@ $(() => {
 
         // change the url
         window.history.pushState({}, href, window.location.origin + href);
-        
+
         render(href); 
     });
 });

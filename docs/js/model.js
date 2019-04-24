@@ -2,7 +2,8 @@
 
 let model = {
     sorting: "newest",
-    posts: []
+    posts: [],
+    team: []
 };
 
 export { model };
