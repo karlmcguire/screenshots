@@ -7,7 +7,7 @@ body {
 }
 
 .wrap {
-  max-width: 900px;
+  padding: 0 0.5rem; 
   margin: auto;
 }
 
@@ -71,6 +71,7 @@ main {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
+    align-items: center;
   }
   .post {
     padding: 1rem;
@@ -79,7 +80,7 @@ main {
     margin-bottom: 2.3rem;
     box-shadow: 0px 0px 5px #999;
     
-    max-width: 375px;
+    max-width: 46%;
   }
     .post:last-child {
       margin-bottom: 0;

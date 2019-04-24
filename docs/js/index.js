@@ -12,7 +12,22 @@ const render = (path) => {
 };
 
 $(() => {
-    render(window.location.pathname);
+    fetch("https://www.reddit.com/r/unixporn.json")
+    .then((resp) => resp.json())
+    .then((data) => {
+        data.data.children.map(post => {
+            if(post.data.url.substr(-3) != "png") return;
+
+            model.posts.push({ 
+                title: post.data.title,
+                user: post.data.author,
+                date: new Date(post.data.created*1000),
+                image: post.data.url
+            });
+        });
+    
+        render(window.location.pathname);
+    })
 
     $("header").on("click", ".nav__link", function(e) {
         e.preventDefault();
