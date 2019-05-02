@@ -34,6 +34,12 @@ header {
   z-index: 10;
 }
 
+footer {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 2rem !important;
+}
+
 nav {
   display: flex;
   justify-content: space-between;
@@ -168,7 +174,7 @@ form {}
 }
 
 .wrap {
-  max-width: 800px;
+  max-width: 1000px;
   margin: auto;
 }
 
