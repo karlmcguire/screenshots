@@ -37,7 +37,7 @@ if file.processed == nil then
 
   -- create table containing processed posts
   local posts = {}
-  for k, v in pairs(data.data.children) do 
+  for k, v in pairs(data.data.children) do
     table.insert(posts, post.new(v.data))
   end
 
