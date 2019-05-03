@@ -14,9 +14,10 @@ const generator = function* (n) {
 
 const format = (post) =>
     ((post.side == "left") ? `<div class="posts__column">` : ``) +
-    `<div class="post">
+    `<div class="post" title="` + post.title + `">
         <div class="post__thumbnail">
-            <img src="` + post.image + `"/>
+            <img class="lazyload" data-original="` + post.image + `"
+                 src="/thumb.png" />
         </div>
         <div class="post__info">
             <div class="post__info__title">` + post.title + `</div>

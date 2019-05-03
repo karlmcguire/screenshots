@@ -72,9 +72,23 @@ const page = {
 
 
         init: (model, path) => {
+            // jquery ui plugin 1
+            $(document).tooltip({track: true});
+
+            // jquery plugin 1
+            $("img.lazyload").lazyload();
+
             $(".post").click((e) => {
-                const url = $(e.currentTarget).find("img").attr("src");
-                window.open(url);
+                const url = $(e.currentTarget).find("img").attr("data-original");
+                // window.open(url);
+
+                $.magnificPopup.open({
+                  items: {
+                    src: url,
+                    type: 'image'
+                  }
+                });
+
             });
 
             $("#button").click(() => {
