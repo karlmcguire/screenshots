@@ -13,6 +13,8 @@ $(() => {
             model.posts = data.filter(post => !post.image.includes("teknik"));
             // create window manager set
             model.posts.map(post => model.wms.add(post.wm.toLowerCase()));
+            // copy for use with options
+            model.all = [...model.posts];
             // create options from window manager set
             let i = 1;
             Array.from(model.wms).map(wm => model.options.wm.push([i++, wm]));

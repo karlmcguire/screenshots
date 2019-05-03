@@ -90,6 +90,9 @@ nav {
     line-height: 1.5;
     padding: 2rem;
   }
+    .box__content *:first-child {
+      margin-top: 0;
+    }
     .box__content p:last-child {
       margin-bottom: 0;
     }
@@ -229,10 +232,10 @@ form {}
     padding: 0.5rem 0;
     margin-bottom: 0.5rem;
     line-height: 1.5;
-    font-size: 1.5rem;  
+    font-size: 1.5rem;
   }
   .view__desc {
-    margin-top: 2rem; 
+    margin-top: 2rem;
     border-top: 1px solid #ddd;
     padding-top: 1rem;
   }
@@ -250,7 +253,7 @@ form {}
       .view__meta__back:hover {
         opacity: 1;
         cursor: pointer;
-        color: #555; 
+        color: #555;
       }
     .view__meta__date {
       font-size: 1rem;

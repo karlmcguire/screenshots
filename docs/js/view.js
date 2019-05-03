@@ -36,7 +36,7 @@ const page = {
             `<div class="options">
                 <div class="options__column">
                     <label>Window Manager</label>
-                    <select class="options__select">` +
+                    <select class="options__select" id="wm">` +
                         model.options.wm.reduce((a, o) => a +
                             comp.option(o), "") +
                     `</select>
@@ -48,7 +48,7 @@ const page = {
                     `</select>
                 </div><div class="options__column">
                     <label>Order</label>
-                    <select class="options__select">` +
+                    <select class="options__select" id="order">` +
                         model.options.order.reduce((a, o) => a +
                             comp.option(o), "") +
                     `</select>
@@ -59,13 +59,75 @@ const page = {
                 </div>
             </div>`,
 
-        render: (model, path) => comp.box("", 
-            page["/"].options(model, path) + `<hr><div class="posts">` +
-            posts(model) + `</div>`),
+        render: (model, path) => {
+            let i = 0;
+            model.posts.map(post => {
+                post.side = ((i++ % 2) == 0) ? "left" : "right";
+            });
+
+            return comp.box("",
+                page["/"].options(model, path) + `<hr><div class="posts">` +
+                posts(model) + `</div>`);
+        },
+
 
         init: (model, path) => {
+            $(".post").click((e) => {
+                const url = $(e.currentTarget).find("img").attr("src");
+                window.open(url);
+            });
+
             $("#button").click(() => {
-                // handle option sorting / filtering 
+                const wm = $("#wm").children("option:selected");
+
+                let posts = [];
+                if (wm.text() == "all") {
+                    posts = model.all;
+                } else {
+                    posts = model.all.filter(post =>
+                        post.wm.toLowerCase() == wm.text());
+                }
+
+                model.options.wm.map(option => {
+                    if (option.length == 3) {
+                        option.pop();
+                    }
+                    if (option[0] == wm.val()) {
+                        option.push(1);
+                    }
+                });
+
+                // get sort direction
+                const dir = $("#order").children("option:selected");
+                model.options.order.map(option => {
+                    if (option.length == 3) {
+                        option.pop();
+                    }
+                    if (option[0] == dir.val()) {
+                        option.push(1);
+                    }
+                });
+
+                // ascending
+                const asc = (a, b) => {
+                    if (a.stars == b.stars) return 0;
+                    return (a.stars < b.stars) ? 1 : -1;
+                }
+
+                // descending
+                const des = (a, b) => {
+                    if (a.stars == b.stars) return 0;
+                    return (a.stars > b.stars) ? 1 : -1;
+                }
+
+                // sort based on order menu
+                posts.sort((dir.val() == 0) ? asc : des);
+
+                view.main.render({
+                    all: model.all,
+                    options: model.options,
+                    posts: posts
+                }, "/");
             });
         }
     },
