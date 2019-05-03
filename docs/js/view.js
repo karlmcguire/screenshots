@@ -1,169 +1,283 @@
 "use strict";
 
-const links = {
-    left: [
-        { text: "blit", href: "/" },
-        { text: "about", href: "/about" }
-    ],
-    right: [
-        { text: "sign in", href: "/sign_in" },
-        { text: "sign up", href: "/sign_up" }
-    ],
+import { config } from "./config.js";
+import { posts } from "./posts.js";
+
+const redirect = (model, path) => {
+    window.history.pushState({}, path, window.location.origin + path);
+    view.render(model, path);
+};
+
+const comp = {
+    option: (option) =>
+        `<option value="` + option[0] + `"` + 
+        ((option[2] != undefined) ? " selected>" : ">") + option[1] + 
+        `</option>`,
+
+    box: (header, content) =>
+        `<div class="box">
+            <h1 class="box__header">` + header + `</h1>
+            <div class="box__content">` + content + `</div></div>`,
+
+    form: (label, id, type, hint) =>
+        `<div class="form__column">
+            <label for="` + id + `">` + label + `</label>
+            <input id="` + id + `" name="` + id + `" type="` + type + `"/>
+            <div class="form__column__info">` + hint + `</div></div>`,
+
+    error: (content, hide) =>
+        `<div id="error" class="error ` + ((hide) ? "hide" : "") + `">
+            <div class="error__content">` + content + `</div></div>`
+};
+
+const page = {
+    "/": {
+        options: (model, path) => 
+            `<div class="options">
+                <div class="options__column">
+                    <label>Window Manager</label>
+                    <select class="options__select">` +
+                        model.options.wm.reduce((a, o) => a +
+                            comp.option(o), "") +
+                    `</select>
+                </div><div class="options__column">
+                    <label>Sort by</label>
+                    <select class="options__select">` +
+                        model.options.sort.reduce((a, o) => a +
+                            comp.option(o), "") +
+                    `</select>
+                </div><div class="options__column">
+                    <label>Order</label>
+                    <select class="options__select">` +
+                        model.options.order.reduce((a, o) => a +
+                            comp.option(o), "") +
+                    `</select>
+                </div><div class="options__column">
+                    <button id="button" class="options__update">
+                        Update
+                    </button>
+                </div>
+            </div>`,
+
+        render: (model, path) => comp.box("", 
+            page["/"].options(model, path) + `<hr><div class="posts">` +
+            posts(model) + `</div>`),
+
+        init: (model, path) => {
+            $("#button").click(() => {
+                // handle option sorting / filtering 
+            });
+        }
+    },
+
+    "/about": {
+        render: (model, path) => {
+            fetch(config.url.about)
+                .then((resp) => resp.json())
+                .then((data) => {
+                    $("main").html(comp.box("About",
+                        data.files["blit_about.html"].content));
+                });
+
+            return comp.box("About", "");
+        },
+
+        init: (model, path) => {}
+    },
+
+    "/contact": {
+        render: (model, path) => {
+            fetch(config.url.contact)
+                .then((resp) => resp.json())
+                .then((data) => {
+                    $("main").html(comp.box("Contact",
+                        data.files["blit_contact.html"].content));
+                });
+
+            return comp.box("Contact", "");
+        },
+        init: (model, path) => {}
+    },
+
+    "/sign_in": {
+        render: (model, path) => comp.box("Sign in", 
+            comp.error(model.error, model.error == undefined) + 
+            `<div class="form__row">` +
+            comp.form("Username", "username", "text",
+                "Username requirements:") +
+            comp.form("Password", "password", "password",
+                "Password requirements:") +
+            `</div><div class="form__row">
+                <div class="form__column"></div>
+                <div class="form__column">
+                    <input id="button" type="submit" value="Sign in"/>
+                </div>
+            </div>`),
+
+        init: (model, path) => {
+            // focus first input box
+            $("#username").focus();
+
+            $("#button").click(() => {
+                const data = {
+                    username: $("#username").val(),
+                    password: $("#password").val(),
+                }
+
+                // send to server
+            });
+        }
+    },
+
+    "/sign_up": {
+        render: (model, path) => comp.box("Sign up", 
+            comp.error(model.error, model.error == undefined) + 
+            `<div class="form__row">` +
+            comp.form("Username", "username", "text",
+                "Username requirements:") +
+            comp.form("Email", "email", "email",
+                "Email requirements:") +
+            `</div><div class="form__row">` +
+            comp.form("Password", "password", "password",
+                "Password requirements:") +
+            comp.form("Password (again)", "password_confirm", "password",
+                "Password requirements:") +
+            `</div><div class="form__row">
+                <div class="form__column">
+                    <label for="terms">
+                        <input type="checkbox" id="terms"/>
+                        I accept the <a href="#">Terms and Conditions</a>.
+                    </label>
+                </div><div class="form__column">
+                    <input id="button" type="submit" value="Sign up"/>
+                </div>
+            </div>`),
+
+        init: (model, path) => {
+            // focus first input box
+            $("#username").focus();
+
+            $("#button").click(() => {
+                const data = {
+                    username:         $("#username").val(),
+                    email:            $("#email").val(),
+                    password:         $("#password").val(),
+                    password_confirm: $("#password_confirm").val(),
+                    terms:            $("#terms").is(":checked"),
+                };
+
+                if(data.password != data.password_confirm) {
+                    $("#error").text("Passwords must match.");
+                    $("#error").removeClass("hide");
+
+                    return;
+                }
+
+                $("#error").text("");
+                $("#error").addClass("hide");
+
+                // send to server
+            });
+        }
+    },
+
+    "/profile": {
+        render: (model, path) => {
+            if(!model.signed_in) {
+                model.error = "You need to be signed in to view your profile.";
+                redirect(model, "/sign_in");
+                model.error = undefined;
+
+                return;
+            }
+
+            return comp.box("Profile", "");
+        },
+
+        init: (model, path) => {}
+    },
+
+    "/post": {
+        render: (model, path) => {
+            if(!model.signed_in) {
+                model.error = "You need to be signed in to post.";
+                redirect(model, "/sign_in");
+                model.error = undefined;
+
+                return;
+            }
+
+            return comp.box("Post", "");
+        },
+
+        init: (model, path) => {}
+    }
 };
 
 const view = {
-    nav: {},
-    main: {},
-    page: {},
-    nap: {}
-};
+    nav: {
+        // nav__link
+        link: (model, path, text, href) => `<a class="nav__link ` + 
+            ((path == ("/" + href)) ? "nav__link--active" : "" ) + 
+                `" href="/` + href + `">` + text + `</a>`,
 
-///////////////////////////////////////////////////////////////////////////////
+        // nav__button
+        button: (href) => `<a class="nav__button" href="/` + href + `">
+            <i class="fas fa-plus"></i></a>`,
 
-view.nav.link = (text, href, path) => 
-    `<a href="` + href + `" class="nav__link` + 
-        ((path) ? ` nav__link--active` : ``) + `">` + text + `</a>`;
+        // nav__links
+        links: (model, path) => {
+            let html = `<div class="nav__links">` + 
+                view.nav.link(model, path, "blit", "") +
+                view.nav.link(model, path, "about", "about") +
+                view.nav.link(model, path, "contact", "contact") + `</div>`;
 
-view.nav.render = (path) =>
-    `<div class="wrap"><nav><div class="nav__links nav__links--left">` + 
-        links.left.reduce((html, link) => html +
-            view.nav.link(link.text, link.href, link.href == path), "") +
-    `</div>` + `<div class="nav__links nav__links--right">` +
-        links.right.reduce((html, link) => html +
-            view.nav.link(link.text, link.href, link.href == path), "") +
-    `</div></nav></div>`;
+            if(!model.signed_in) {
+                html += `<div class="nav__links">` +
+                    view.nav.link(model, path, "sign in", "sign_in") +
+                    view.nav.link(model, path, "sign up", "sign_up") +
+                    view.nav.button("post") + `</div>`;
+            } else {
+                html += `<div class="nav__links">` +
+                    view.nav.link(model, path, "profile", "profile") +
+                    view.nav.button("post") + `</div>`;
+            }
 
-view.main.render = (path, model) =>
-    `<div class="wrap"><div class="content">` + 
-        view.page[path](model) + `</div></div>`;
+            return html;
+        },
 
-///////////////////////////////////////////////////////////////////////////////
+        // nav
+        render: (model, path) => {
+            // render html
+            $("nav").html(view.nav.links(model, path));
+            // init event listeners
+            view.nav.init(model, path);
+        },
 
-view.page["/"] = (model) => {
-    const newest = (a, b) => new Date(b.date) - new Date(a.date);
-    const oldest = (a, b) => new Date(a.date) - new Date(b.date);
-
-    const sorted = model.posts.sort(
-        (model.sorting == "newest") ? newest : oldest);
-
-    const option = (name) => `<option value="` + name + `"` +
-        ((model.sorting == name) ? " selected" : "") + `>` + name + `</option>`;
-
-    const select = `
-        <div class="select">
-            <label for="select__method">Sorting method:</label>
-        </div>
-        <div class="select">
-        <div class="select__menu">
-            <select name="select__method" id="select__method">
-            ` +
-            option("newest") + 
-            option("oldest") +
-            ` 
-            </select>
-        </div>
-        <button id="select__button">Sort</button>
-        </div>`;
-
-    const posts = sorted.reduce((posts, post) => posts +
-        `<div class="post">
-            <a class="post__link" href="` + post.image + `">
-                <img src="` + post.image + `"/>
-            </a>
-            <div class="post__info">
-                <span class="post__title">` + post.title + `</span>
-                <span class="post__user">` + post.user + ` (` +
-                    $.datepicker.formatDate("MM d, yy", post.date) +
-                    `)
-                </span>
-            </div>
-        </div>`, "");
-
-    return select + `<div class="posts">` + posts + `</div>`;
-}
-
-view.nap["/"] = (model) => {
-    $("#select__method").selectmenu();
-    $("#select__button").button();
-
-    $("#select__button").click(() => {
-        model.sorting = $("#select__method").val();
-
-        $("main").html(view.main.render("/", model));
-        view.nap["/"](model);
-    });
-
-    $(".post__link").magnificPopup({
-        type: "image",
-        mainClass: "mfp-with-zoom",
-
-        zoom: {
-            enabled: true,
-            duration: 300,
-            easing: "ease-in-out"
+        init: (model, path) => {
+            // set up nav link handlers
+            $("header").on("click", "nav a", function(e) {
+                e.preventDefault();
+                let href = $(this).attr("href");
+                if (href == window.location.pathname) return;
+                redirect(model, href);
+            });
         }
-    });
+    },
+
+    main: {
+        render: (model, path) => {
+            // render html
+            $("main").html(page[path].render(model, path));
+            // init event listeners
+            page[path].init(model, path);
+        }
+    },
+
+    render: (model, path) => {
+        view.nav.render(model, path);
+        view.main.render(model, path);
+    }
 };
-
-///////////////////////////////////////////////////////////////////////////////
-
-view.page["/about"] = (model) => `<h2>About</h2>
-    <p>This is meant to be a community of people who enjoy customizing and 
-sharing their Unix desktops. We'd like to create a simple interface in order 
-to highlight your creations. This platform is still under heavy development, 
-    but check back in after a few months and it should be up and running — 
-ready to host your screenshots and dotfiles.</p>
-    <h2>Team</h2>` +
-    model.team.reduce((team, person) => team + 
-        `<h3>` + person.name + `</h3>
-        <h4>` + person.title + `</h4>
-        <p>` + person.bio + `</p>`, "");
-
-view.nap["/about"] = (model) => {};
-
-///////////////////////////////////////////////////////////////////////////////
-
-view.page["/sign_up"] = (model) => `
-<form action="javascript:void(0)">
-            <label>Email</label> 
-            <input id="email" type="email" autofocus/>
-            
-            <label>Username</label> 
-            <input type="text" />
-            
-            <label>Password</label> 
-            <input type="password" />
-            
-            <label>Password (Again)</label> 
-            <input type="password" />
-
-            <input type="submit" />
-          </form>
-`;
-
-view.nap["/sign_up"] = (model) => {
-    $("#email").focus();
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-view.page["/sign_in"] = (model) => `
-<form action="javascript:void(0)">
-            <label>Username</label> 
-            <input id="username" type="text" autofocus/>
-            
-            <label>Password</label> 
-            <input type="password" />
-            
-            <input type="submit" />
-          </form>
-`;
-
-
-view.nap["/sign_in"] = (model) => {
-    $("#username").focus();
-};
-
-///////////////////////////////////////////////////////////////////////////////
 
 export { view };
